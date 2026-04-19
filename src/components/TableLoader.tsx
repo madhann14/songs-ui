@@ -1,6 +1,5 @@
 "use client";
 
-/** Fixed-height loader container to prevent layout shift during table loading. */
 export default function TableLoader() {
   return (
     <div className="min-h-96 flex flex-col gap-4">

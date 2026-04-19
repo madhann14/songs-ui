@@ -7,7 +7,6 @@ interface Props {
   onClear: () => void;
 }
 
-/** Input + button to search a song by title. */
 export default function SearchBar({ searchQuery, setSearchQuery, onSearch, onClear }: Props) {
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();

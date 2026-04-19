@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, use } from "react";
 import { getSongs, updateRating } from "@/lib/api";
 import { downloadCSV } from "@/lib/csv";
 import SongsTable from "@/components/SongsTable";
@@ -13,7 +13,6 @@ import type { Song, PaginatedSongsResponse } from "@/types/song";
 const PAGE_SIZE = 10;
 
 export default function Home() {
-  // ── Table state ──────────────────────────────────────────────────────────
   const [songs, setSongs] = useState<Song[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -23,10 +22,8 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // ── Chart state (all songs, loaded once) ─────────────────────────────────
   const [allSongs, setAllSongs] = useState<Song[]>([]);
 
-  // ── Fetch current page from the API ──────────────────────────────────────
   const fetchPage = useCallback(async () => {
     setLoading(true);
     setError(null);
@@ -51,14 +48,18 @@ export default function Home() {
     fetchPage();
   }, [fetchPage]);
 
-  // Load all songs once for charts (non-critical, silent failure)
+  useEffect(() => {
+    if (!searchQuery.trim()) {
+      fetchPage();
+    }
+  }, [searchQuery]);
+
   useEffect(() => {
     getSongs(1, 100, "", "index", "asc")
       .then((data: PaginatedSongsResponse) => setAllSongs(data.songs))
       .catch(() => { });
   }, []);
 
-  // ── Handlers ─────────────────────────────────────────────────────────────
   async function handleSearch(title: string) {
     setError(null);
     try {
@@ -82,7 +83,6 @@ export default function Home() {
   async function handleRating(index: number, rating: number) {
     try {
       await updateRating(index, rating);
-      // Update rating in both the paginated list and the chart dataset
       const patch = (list: Song[]) =>
         list.map((s) => (s.index === index ? { ...s, rating } : s));
       setSongs(patch);
@@ -92,7 +92,6 @@ export default function Home() {
     }
   }
 
-  // ── Render ────────────────────────────────────────────────────────────────
   return (
     <main className="max-w-screen-xl mx-auto px-6 py-8">
       <h1 className="text-2xl font-bold mb-1">Songs Dashboard</h1>

@@ -6,7 +6,6 @@ interface Props {
   readOnly?: boolean;
 }
 
-/** Renders 5 clickable stars. Calls onChange with the clicked star number (1–5). */
 export default function StarRating({
   value,
   onChange,
@@ -28,7 +27,7 @@ export default function StarRating({
             star <= value ? "text-yellow-400" : "text-gray-300",
             readOnly
               ? "cursor-default opacity-50"
-              : "cursor-pointer hover:text-yellow-300",
+              : "cursor-pointer",
           ].join(" ")}
         >
           ★
