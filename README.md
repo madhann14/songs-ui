@@ -71,6 +71,5 @@ src/
 
 | Method | Path | Description |
 | --- | --- | --- |
-| GET | `/songs` | All songs (paginated). Params: `page`, `page_size`, `sort_by`, `order` |
-| GET | `/songs/search` | Search by title. Param: `title` |
+| GET | `/songs` | All songs (paginated). Params: `page`, `page_size`, `search_query`, `sort_by`, `order` |
 | PATCH | `/songs/{index}/rating` | Update star rating. Body: `{ "rating": 1–5 }` |
